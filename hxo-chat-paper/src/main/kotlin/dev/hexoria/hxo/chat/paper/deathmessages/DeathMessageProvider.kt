@@ -1,0 +1,356 @@
+package dev.hexoria.hxo.chat.paper.deathmessages
+
+import dev.slne.surf.api.core.messages.Colors
+import dev.slne.surf.api.core.messages.adventure.buildText
+import dev.slne.surf.api.core.messages.builder.SurfComponentBuilder
+import dev.slne.surf.api.core.util.mutableObject2ObjectMapOf
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextReplacementConfig
+import org.bukkit.entity.*
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause
+import kotlin.reflect.KClass
+
+object DeathMessageProvider {
+
+    private const val PLAYER_PLACEHOLDER = "<player>"
+    private const val KILLER_PLACEHOLDER = "<killer>"
+
+    private val genericMessages = mutableObject2ObjectMapOf<DamageCause, List<Component>>(
+        DamageCause.FALL to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" boden war da!")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" hat den Boden gefunden.")
+            }
+        ),
+        DamageCause.VOID to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" fällt nun für immer.")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" ist das end hier?")
+            }
+        ),
+        DamageCause.THORNS to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" die rüstung tut weh.")
+            }
+        ),
+        DamageCause.SUICIDE to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wollte nicht mehr leben!")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" hat sich das leben genommen!")
+            }
+        ),
+        DamageCause.SUFFOCATION to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde lebendig begraben!")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" muss nicht mehr begraben werden.")
+            }
+        ),
+        DamageCause.STARVATION to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" ist verhungert!")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" nächste mal was essen.")
+            }
+        ),
+        DamageCause.POISON to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" das esse war nicht mehr gut!")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" starb an einer Vergiftung!")
+            }
+        ),
+        DamageCause.MAGIC to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" Magie ist leider nicht mehr gut!")
+            }
+        ),
+        DamageCause.LIGHTNING to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde vom Blitz erschlagen!")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" Gott hat nein gesagt.")
+            }
+        ),
+        DamageCause.LAVA to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" verwechselte mit Wasser.")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" ging in Flammen auf!")
+            }
+        ),
+        DamageCause.FIRE_TICK to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" ist nur schwarz noch!")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" muss nicht mehr begraben werden.")
+            }
+        ),
+        DamageCause.DROWNING to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" war leider kein Fisch.")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" könnte nicht schwimmen!")
+            }
+        ),
+        DamageCause.CRAMMING to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde in der Masse zerdrückt!")
+            }
+        ),
+        DamageCause.DRAGON_BREATH to listOf(
+            buildText {
+                spacer("Ein Drache hat")
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" geröstet")
+            }
+        ),
+        DamageCause.CONTACT to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wure zu Tode gestochen!")
+            }
+        ),
+        DamageCause.FREEZE to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" ist eingefroren")
+            }
+        ),
+        DamageCause.WITHER to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" ist innerlich zerbröselt.")
+            }
+        ),
+        DamageCause.SONIC_BOOM to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde vom ein Laser gestorben.")
+            }
+        )
+    )
+
+    private val entityMessages = mutableObject2ObjectMapOf<KClass<out Entity>, List<Component>>(
+        Creeper::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde von ein Creeper zerfetzt!")
+            },
+            buildText {
+                spacer(" Ein Creeper hat")
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" hochgejagt!")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" war alleine im Wald")
+            }
+        ),
+        Zombie::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wure von einem Zombie getötet!")
+            },
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" War lecker (Zombie).")
+            }
+        ),
+        Skeleton::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde von einem Skeleton getötet!")
+            }
+        ),
+        Wither::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde vom Wither getötet!")
+            },
+            buildText {
+                spacer(" Wither 1")
+                spacer(PLAYER_PLACEHOLDER + "0.")
+            }
+        ),
+        WitherSkeleton::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde vom einem Wither Skelett.")
+            }
+        ),
+        EnderDragon::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde von einem Enderdragon.")
+            }
+        ),
+        Player::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde von ")
+                spacer(KILLER_PLACEHOLDER)
+                spacer(" gekill!")
+            }
+        ),
+        Ghast::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde von Ghast gestoffen!")
+            }
+        ),
+        TNTPrimed::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" war keine Wunderkerze!")
+            }
+        ),
+        Spider::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde von einer Spinne erledigt!")
+            }
+        ),
+        Wolf::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde von einem Wolf erledigt!")
+            }
+        ),
+        Blaze::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde in flammen gesetzt von Blaze.")
+            }
+        ),
+        Bee::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" hatte eine Bienenallgie!")
+            }
+        ),
+        Enderman::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" lieber nicht mit den großen anlegen.")
+            }
+        ),
+        IronGolem::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde von einem Eisengolem in Himmel geworfen.")
+            }
+        ),
+        Ravager::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde von einem Ravager gekill.")
+            }
+        ),
+        Piglin::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" war pures Gold!")
+            }
+        ),
+        Phantom::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" soll mehr schafen!Q")
+            }
+        ),
+        Silverfish::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde versilbert!")
+            }
+        ),
+        Hoglin::class to listOf(
+            buildText {
+                spacer(PLAYER_PLACEHOLDER)
+                spacer(" wurde von einem zerstampft")
+            }
+        )
+    )
+
+    private val DEFAULT_MESSAGE = buildText {
+        appendDeathPrefix()
+        variableValue(PLAYER_PLACEHOLDER)
+        spacer(" ist gestorben.")
+    }
+
+    private fun getMessage(cause: DamageCause?, killer: Entity?): Component {
+        val entityMessage = killer
+            ?.let { kr ->
+                entityMessages.entries
+                    .firstNotNullOfOrNull { (clazz, templates) -> if (clazz.isInstance(kr)) templates.random() else null }
+            }
+        return entityMessage ?: genericMessages[cause]?.random() ?: DEFAULT_MESSAGE
+    }
+
+    fun getDeathMessageComponent(
+        player: Player,
+        cause: DamageCause?,
+        killer: Entity?
+    ): Component {
+        var deathMessage = getMessage(cause, killer)
+        deathMessage = deathMessage.replaceText(
+            TextReplacementConfig.builder().matchLiteral(PLAYER_PLACEHOLDER).replacement(player.displayName()).build()
+        )
+
+        killer?.let { kr ->
+            val killerName = when (kr) {
+                is Player -> kr.displayName()
+                else -> Component.translatable(kr.type.translationKey()).colorIfAbsent(Colors.VARIABLE_VALUE)
+            }
+            deathMessage = deathMessage.replaceText(
+                TextReplacementConfig.builder().matchLiteral(KILLER_PLACEHOLDER).replacement(killerName).build()
+            )
+        }
+
+        return deathMessage
+    }
+
+    private fun SurfComponentBuilder.appendDeathPrefix() = append {
+        spacer("[")
+        error("💀")
+        spacer("]")
+        appendSpace()
+    }
+}
